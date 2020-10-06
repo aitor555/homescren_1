@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+	<div class="MVwin" id="marvin">
+		<div class="TTLbar bd" id="ttl">
+			<p>text</p>
+			<div class="btn-holder">
+			<button class="bd navbtn" tabindex="-1"></button>
+			<button class="bd navbtn" tabindex="-1"></button>
+			<button class="bd navbtn" tabindex="-1"></button>
+			</div>
+		</div>
+		<div class="mainbar bd" id="main">
+			<div class="mainbarWrap" id="mainbarWrap">
+				<div class="MBcontent">
+					<!--<h1>title</h1>
+					<p>Sub-orbital shanty town katana neon apophenia shrine camera wonton soup uplink bicycle BASE jump tattoo into paranoid receding pen geodesic.</p>-->
+					<div id = "terminal">
+					</div>
+				</div>
+				<div class="MBctrl">
+					<button class="bd ctrlbtn" tabindex="-1">ok</button>
+					<button class="bd ctrlbtn" tabindex="-1">close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	function change(){
+	var width = document.getElementById('main').offsetWidth;
+	var pad = document.getElementById('main').padding;
+	document.getElementById("ttl").style.width = width + "px";
+	document.getElementById("mainbarWrap").style.width = width-42 + "px";
+	}
+	setInterval(change, 0); 
+
+
+	// Make the DIV element draggable:
+	dragElement(document.getElementById("marvin"));
+
+	function dragElement(elmnt) {
+	  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+	  if (document.getElementById("ttl")) {
+	    // if present, the header is where you move the DIV from:
+	    document.getElementById("ttl").onmousedown = dragMouseDown;
+	  } else {
+	    // otherwise, move the DIV from anywhere inside the DIV:
+	    elmnt.onmousedown = dragMouseDown;
+	  }
+
+	  function dragMouseDown(e) {
+	    e = e || window.event;
+	    e.preventDefault();
+	    // get the mouse cursor position at startup:
+	    pos3 = e.clientX;
+	    pos4 = e.clientY;
+	    document.onmouseup = closeDragElement;
+	    // call a function whenever the cursor moves:
+	    document.onmousemove = elementDrag;
+	  }
+
+	  function elementDrag(e) {
+	    e = e || window.event;
+	    e.preventDefault();
+	    // calculate the new cursor position:
+	    pos1 = pos3 - e.clientX;
+	    pos2 = pos4 - e.clientY;
+	    pos3 = e.clientX;
+	    pos4 = e.clientY;
+	    var w = window.innerWidth;
+		var h = window.innerHeight;
+	    var winH = document.getElementById("marvin").style.height;
+	    // set the element's new position:
+	    if (elmnt.offsetTop >= 2 || pos2 <= 0) {
+	    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";}
+
+	    if (elmnt.offsetLeft >= 2 || pos1 <= 0) {
+	    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";}
+
+	    if (elmnt.offsetTop >= h - winH) {
+	    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";}
+	    
+	   /* if (elmnt.offsetLeft >= 2 || pos1 <= 0) {
+	    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";} */
+	  }
+
+	  function closeDragElement() {
+	    // stop moving when mouse button is released:
+	    document.onmouseup = null;
+	    document.onmousemove = null;
+	  }
+	}
+</script>
+<!-- C O M M A N D S    F O R    T H E    T E R M I N A L -->
+    <script src = "libs/printLib.js"></script>
+	<script src = "libs/position.js"></script>
+	<script src = "libs/getRSS.js"></script>
+	
+	<script src = "bin/io.js"></script>
+	<script src = "bin/repl.js"></script>
+
+	<script src = "bin/clear.js"></script>
+	<script src = "bin/echo.js"></script>
+	<script src = "bin/about.js"></script>
+	<script src = "bin/help.js"></script>
+	<script src = "bin/search.js"></script>
+	<script src = "bin/redir.js"></script>
+	<script src = "bin/rss.js"></script>
+<!-- C O M M A N D S    F O R    T H E    T E R M I N A L -->
+	
+	
+<!-- M U H    F U N C T I O N A L I T Y -->	
+	<script>
+
+        // -- CONSTANTS N SUCH -- //
+
+        var username = "armstrong";
+        var host = "aitor";
+        var cd = "'_'";
+        var promptString = "<p id = 'prompt' >" + username + "@" + host + "[" + cd + "]: </p>";
+        var inputString = "<pre id  = 'input' contentEditable = 'true' tabindex='0'></pre>";
+        var inputBlock = "<pre id = 'caret'>&#9608;</pre>";
+        var postInput = "<div id = 'post'></div>"; 
+
+		var seperatorLength = 4;
+		var seperator = Array(seperatorLength+1).join("-")		
+		
+        var tabLength = 4;
+        var tab = Array(tabLength+1).join(" ");
+		
+		var loading = "<div id='loading'><p>loading</p><ul><li>.</li><li>.</li><li>.</li></ul></div>"
+
+		
+		// -- ACTUAL RUNNING CODE BELOW -- //
+
+
+        $(document).ready(function() {	
+			/*print("The font 'Sazayama Gothic' is highly recommended, though attempts have been made to not be overly dependent on this.");
+			print("<p><i>Version 3; test release. Please email suggestions to 6c556d22b7@outlook.com~</i></p>");*/
+			
+			$("#terminal").append("<br>" + promptString + inputString + inputBlock + postInput);
+            $("#input").focus();
+			resetInput();
+        });
+		
+		
+		// --COMMAND n HELP LIST -- //
+		
+		
+		var COMMAND_LIST = ["echo", "clear", "help", "google", 
+							"facebook", "youtube", "site", "about", 
+							"wikipedia", "cd", "ls", "pwd", 
+							"rss", "discord", "trello",
+						   ];
+        
+        var HELP_LIST = ["The console prints out the arguments to this function", 
+						 "Clears and redraws the terminal",
+                         "Displays a list of recognised functions", 
+						 "Performs a Google Search containing arguments",
+                         "Redirects to Facebook, taking no arguments", 
+						 "Performs a YouTube search with arguments",
+                         "Redirects to argument.com, or argument.argument2 if specified", 
+                         "displays generic about information", 
+						 "Redirects to wikipedia.com", "Changes current location",
+                         "Shows files in current location", 
+						 "Prints the current location", 
+						 "Gets an RSS feed. Arg 1 = Source, Arg 2 = number of results",
+						 "Redirects to Discord IRC", "Life Planning :)"];
+						 
+		var historyList = [0,];
+		
+		var historyIndex = 0;
+		
+    </script>
+</html>
